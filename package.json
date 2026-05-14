@@ -1,0 +1,15 @@
+{
+  "name": "bmw-ai-configurator",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Scan-to-build BMW configurator powered by Gemini 2.5 Flash Image.",
+  "scripts": {
+    "dev": "node --env-file=.env.local dev-server.mjs",
+    "dev:vercel": "vercel dev",
+    "deploy": "vercel deploy --prod"
+  },
+  "devDependencies": {
+    "@vercel/node": "^5.1.0",
+    "typescript": "^5.6.3"
+  }
+}
