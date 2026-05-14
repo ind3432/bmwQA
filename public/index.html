@@ -3,41 +3,51 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<meta name="theme-color" content="#000000" />
+<meta name="theme-color" content="#06070b" />
 <title>BMW · AI Configurator</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='46' fill='%23000' stroke='%23fff' stroke-width='4'/%3E%3Cpath d='M50 4a46 46 0 0 1 46 46H50z' fill='%231c69d4'/%3E%3Cpath d='M50 96a46 46 0 0 1-46-46h46z' fill='%231c69d4'/%3E%3C/svg%3E" />
 <style>
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
   :root {
-    --bg-0: #050507;
-    --bg-1: #0c0c10;
-    --bg-2: #15151b;
-    --surface: rgba(255, 255, 255, 0.04);
-    --surface-strong: rgba(255, 255, 255, 0.08);
-    --hairline: rgba(255, 255, 255, 0.08);
-    --hairline-strong: rgba(255, 255, 255, 0.18);
-    --ink: #f5f5f7;
-    --ink-dim: rgba(245, 245, 247, 0.6);
-    --ink-faint: rgba(245, 245, 247, 0.38);
-    --bmw-blue: #1c69d4;
-    --bmw-blue-light: #4a9aff;
-    --bmw-red: #e22b34;
-    --apple-spring: cubic-bezier(0.34, 1.4, 0.42, 1);
-    --apple-ease: cubic-bezier(0.32, 0.72, 0, 1);
-    --radius-sm: 12px;
-    --radius-md: 18px;
-    --radius-lg: 24px;
-    --radius-xl: 32px;
+    --bg-0:           #06070b;
+    --bg-1:           #0c0d12;
+    --bg-2:           #14151c;
+    --surface:        rgba(255, 255, 255, 0.035);
+    --surface-strong: rgba(255, 255, 255, 0.07);
+    --hairline:       rgba(255, 255, 255, 0.07);
+    --hairline-mid:   rgba(255, 255, 255, 0.12);
+    --hairline-strong:rgba(255, 255, 255, 0.2);
+    --refract-top:    rgba(255, 255, 255, 0.07);
+    --refract-bot:    rgba(0, 0, 0, 0.25);
+
+    --ink:            #f5f5f7;
+    --ink-dim:        rgba(245, 245, 247, 0.62);
+    --ink-faint:      rgba(245, 245, 247, 0.38);
+    --ink-quiet:      rgba(245, 245, 247, 0.22);
+
+    --bmw:            #1c69d4;
+    --bmw-soft:       #4f9bff;
+    --bmw-deep:       #0c3e8c;
+    --bmw-red:        #d8232f;
+
+    --spring:         cubic-bezier(0.34, 1.4, 0.42, 1);
+    --ease:           cubic-bezier(0.32, 0.72, 0, 1);
+
+    --r-xs: 10px;
+    --r-sm: 14px;
+    --r-md: 20px;
+    --r-lg: 28px;
   }
 
   html, body { height: 100%; }
 
   body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Text', system-ui, sans-serif;
+    font-family: 'Geist', -apple-system, BlinkMacSystemFont, 'SF Pro Text', system-ui, sans-serif;
+    font-feature-settings: "ss01", "cv11";
     background: var(--bg-0);
     color: var(--ink);
     -webkit-font-smoothing: antialiased;
@@ -45,13 +55,38 @@
     overflow-x: hidden;
     min-height: 100vh;
     min-height: 100dvh;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.011em;
     overscroll-behavior-y: contain;
-    text-size-adjust: 100%;
     -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
     padding-bottom: env(safe-area-inset-bottom);
   }
 
+  .mono {
+    font-family: 'Geist Mono', ui-monospace, SFMono-Regular, monospace;
+    font-feature-settings: "zero", "ss01";
+  }
+  .display {
+    font-family: 'Bebas Neue', 'Geist', sans-serif;
+    letter-spacing: 0.015em;
+    line-height: 0.92;
+    font-weight: 400;
+  }
+
+  /* Reusable inline-icon system. */
+  .i {
+    width: 1em;
+    height: 1em;
+    flex: none;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    vertical-align: -0.125em;
+  }
+
+  /* Ambient atmosphere: two BMW-blue blooms, one faint navy. No purple. */
   .ambient {
     position: fixed;
     inset: 0;
@@ -59,41 +94,44 @@
     overflow: hidden;
     pointer-events: none;
   }
-  .orb {
+  .glow {
     position: absolute;
-    width: 60vw;
-    height: 60vw;
-    max-width: 720px;
-    max-height: 720px;
     border-radius: 50%;
-    filter: blur(110px);
-    opacity: 0.35;
+    filter: blur(120px);
     will-change: transform;
   }
-  .orb-1 { background: var(--bmw-blue); top: -20%; left: -20%; animation: float1 22s var(--apple-ease) infinite alternate; }
-  .orb-2 { background: #6a3df0; bottom: -30%; right: -25%; animation: float2 26s var(--apple-ease) infinite alternate; opacity: 0.28; }
-  .orb-3 { background: var(--bmw-red); top: 40%; right: -10%; width: 38vw; height: 38vw; opacity: 0.18; animation: float3 30s var(--apple-ease) infinite alternate; }
-  @keyframes float1 { from { transform: translate(0,0) scale(1); } to { transform: translate(8vw, 6vh) scale(1.15); } }
-  @keyframes float2 { from { transform: translate(0,0) scale(1); } to { transform: translate(-6vw, -8vh) scale(1.1); } }
-  @keyframes float3 { from { transform: translate(0,0); } to { transform: translate(-4vw, -4vh); } }
-
-  .mono { font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace; }
-  .display {
-    font-family: 'Bebas Neue', 'Inter', sans-serif;
-    letter-spacing: 0.02em;
-    line-height: 0.92;
-    font-weight: 400;
+  .glow-a {
+    width: 60vw; height: 60vw; max-width: 700px; max-height: 700px;
+    background: var(--bmw); opacity: 0.22;
+    top: -22%; left: -18%;
+    animation: drift-a 26s var(--ease) infinite alternate;
   }
+  .glow-b {
+    width: 50vw; height: 50vw; max-width: 600px; max-height: 600px;
+    background: var(--bmw-deep); opacity: 0.32;
+    bottom: -28%; right: -18%;
+    animation: drift-b 32s var(--ease) infinite alternate;
+  }
+  .glow-c {
+    width: 26vw; height: 26vw; max-width: 320px; max-height: 320px;
+    background: var(--bmw-red); opacity: 0.06;
+    top: 38%; right: -4%;
+    animation: drift-c 36s var(--ease) infinite alternate;
+  }
+  @keyframes drift-a { from { transform: translate(0,0) scale(1); } to { transform: translate(6vw, 5vh) scale(1.12); } }
+  @keyframes drift-b { from { transform: translate(0,0) scale(1); } to { transform: translate(-5vw, -6vh) scale(1.08); } }
+  @keyframes drift-c { from { transform: translate(0,0); } to { transform: translate(-3vw, -3vh); } }
 
+  /* BMW tri-stripe — a hairline, not a band. */
   .stripe {
-    height: 3px;
+    height: 2px;
     background: linear-gradient(90deg,
-      var(--bmw-blue) 0 33.33%,
-      #ffffff 33.33% 66.66%,
+      var(--bmw) 0 33.33%,
+      var(--ink) 33.33% 66.66%,
       var(--bmw-red) 66.66% 100%);
-    box-shadow: 0 0 24px rgba(28, 105, 212, 0.4);
   }
 
+  /* Frosted nav. */
   nav {
     position: sticky;
     top: 0;
@@ -104,196 +142,237 @@
     gap: 12px;
     padding: 12px max(16px, env(safe-area-inset-left)) 12px max(16px, env(safe-area-inset-right));
     padding-top: max(12px, env(safe-area-inset-top));
-    background: rgba(5, 5, 7, 0.65);
-    backdrop-filter: saturate(180%) blur(20px);
-    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    background: rgba(6, 7, 11, 0.7);
+    backdrop-filter: saturate(180%) blur(22px);
+    -webkit-backdrop-filter: saturate(180%) blur(22px);
     border-bottom: 1px solid var(--hairline);
   }
   .logo { display: flex; align-items: center; gap: 12px; min-width: 0; }
   .roundel {
     width: 30px; height: 30px; border-radius: 50%;
-    background: #000;
-    border: 1.5px solid rgba(255,255,255,0.85);
+    background: var(--ink);
     position: relative;
     flex-shrink: 0;
     overflow: hidden;
+    box-shadow: 0 0 0 1.5px var(--ink), inset 0 0 0 2px #000;
   }
-  .roundel-q {
-    position: absolute; width: 50%; height: 50%;
-  }
-  .roundel-q.tl { top: 0; left: 0; background: var(--bmw-blue); }
-  .roundel-q.tr { top: 0; right: 0; background: #f5f5f7; }
-  .roundel-q.bl { bottom: 0; left: 0; background: #f5f5f7; }
-  .roundel-q.br { bottom: 0; right: 0; background: var(--bmw-blue); }
-  .roundel-inner {
+  .roundel-q { position: absolute; width: 50%; height: 50%; }
+  .roundel-q.tl { top: 0;    left: 0;  background: var(--bmw); }
+  .roundel-q.tr { top: 0;    right: 0; background: var(--ink); }
+  .roundel-q.bl { bottom: 0; left: 0;  background: var(--ink); }
+  .roundel-q.br { bottom: 0; right: 0; background: var(--bmw); }
+  .roundel::after {
+    content: '';
     position: absolute; inset: 0;
     border-radius: 50%;
-    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.6);
-    pointer-events: none;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.5);
   }
 
   .logo-text {
+    font-family: 'Geist Mono', ui-monospace, monospace;
     font-size: 10.5px;
-    opacity: 0.7;
-    letter-spacing: 0.18em;
+    color: var(--ink-dim);
+    letter-spacing: 0.16em;
     font-weight: 500;
     text-transform: uppercase;
     white-space: nowrap;
   }
   .nav-actions { display: flex; gap: 8px; }
   .nav-btn {
-    font-family: 'Inter', sans-serif;
-    font-size: 12px;
+    font-family: 'Geist', sans-serif;
+    font-size: 13px;
     font-weight: 500;
-    letter-spacing: 0.02em;
-    padding: 10px 14px;
-    min-height: 36px;
+    letter-spacing: -0.005em;
+    padding: 10px 16px;
+    min-height: 38px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
     border: 1px solid var(--hairline);
     background: var(--surface);
     color: var(--ink);
     border-radius: 999px;
     cursor: pointer;
-    transition: all 0.2s var(--apple-ease);
+    transition: transform 0.18s var(--spring), background-color 0.22s var(--ease), border-color 0.22s var(--ease);
     -webkit-tap-highlight-color: transparent;
+    box-shadow: inset 0 1px 0 var(--refract-top);
     white-space: nowrap;
   }
   .nav-btn:hover, .nav-btn:focus-visible {
-    border-color: var(--hairline-strong);
+    border-color: var(--hairline-mid);
     background: var(--surface-strong);
     outline: none;
   }
-  .nav-btn:active { transform: scale(0.96); }
+  .nav-btn:active { transform: scale(0.97); }
+  .nav-btn .i { font-size: 14px; opacity: 0.75; }
 
+  /* Layout containers. */
   .container { max-width: 720px; margin: 0 auto; padding: 24px max(20px, env(safe-area-inset-left)); }
   .container-wide { max-width: 1280px; margin: 0 auto; padding: 24px max(20px, env(safe-area-inset-left)); }
 
   .view { display: none; }
   .view.active {
     display: block;
-    animation: fadeUp 0.55s var(--apple-spring) both;
+    animation: rise 0.55s var(--spring) both;
   }
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(16px); }
-    to { opacity: 1; transform: translateY(0); }
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
   }
 
-  /* START */
+  /* ── START ───────────────────────────────────────── */
+  .hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+  @media (min-width: 760px) {
+    .hero {
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 32px;
+      align-items: end;
+    }
+  }
+  .hero-main { min-width: 0; }
   .hero-eyebrow {
+    font-family: 'Geist Mono', monospace;
     font-size: 11px;
-    letter-spacing: 0.24em;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
     color: var(--ink-faint);
-    margin: clamp(28px, 8vh, 56px) 0 20px;
+    margin: clamp(28px, 8vh, 64px) 0 20px;
     display: flex;
     align-items: center;
     gap: 10px;
   }
-  .hero-eyebrow .dot {
+  .hero-eyebrow .pulse {
     display: inline-block; width: 6px; height: 6px; border-radius: 50%;
-    background: var(--bmw-blue-light);
-    box-shadow: 0 0 8px var(--bmw-blue-light);
-    animation: pulse 2s ease-in-out infinite;
+    background: var(--bmw-soft);
+    animation: pulse 2.2s ease-in-out infinite;
   }
   @keyframes pulse {
-    0%, 100% { opacity: 0.4; transform: scale(1); }
-    50% { opacity: 1; transform: scale(1.15); }
+    0%, 100% { opacity: 0.45; transform: scale(1); box-shadow: 0 0 0 0 rgba(79,155,255,0); }
+    50%      { opacity: 1;    transform: scale(1.15); box-shadow: 0 0 0 6px rgba(79,155,255,0.06); }
   }
   .hero-title {
-    font-size: clamp(52px, 14vw, 144px);
+    font-size: clamp(48px, 11vw, 110px);
     margin-bottom: clamp(16px, 3vh, 24px);
+    font-weight: 400;
   }
-  .hero-title .blue {
-    background: linear-gradient(135deg, var(--bmw-blue-light) 0%, var(--bmw-blue) 60%, #0a3a8a 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+  .hero-title .accent {
+    color: var(--bmw-soft);
   }
   .hero-desc {
-    font-size: clamp(15px, 4vw, 17px);
+    font-family: 'Geist', sans-serif;
+    font-size: clamp(15px, 3.6vw, 17px);
     line-height: 1.5;
     color: var(--ink-dim);
     max-width: 460px;
     margin-bottom: clamp(28px, 5vh, 40px);
     font-weight: 400;
   }
+  .hero-aside {
+    display: none;
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-quiet);
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    padding-bottom: 8px;
+  }
+  @media (min-width: 760px) {
+    .hero-aside { display: block; }
+  }
+
+  /* Primary CTA. */
   .cta {
     display: inline-flex;
     align-items: center;
     gap: 14px;
-    background: linear-gradient(180deg, #ffffff 0%, #e6e6ea 100%);
-    color: #000;
-    padding: 16px 24px 16px 26px;
+    background: linear-gradient(180deg, #ffffff 0%, #e8e8ed 100%);
+    color: var(--bg-0);
+    padding: 14px 22px 14px 26px;
     min-height: 56px;
     border: none;
     border-radius: 999px;
     cursor: pointer;
     font-family: inherit;
-    transition: all 0.25s var(--apple-spring);
-    box-shadow: 0 12px 36px -8px rgba(255,255,255,0.18), inset 0 1px 0 rgba(255,255,255,0.6);
+    transition: transform 0.25s var(--spring), box-shadow 0.25s var(--ease);
+    box-shadow:
+      0 10px 32px -10px rgba(28, 105, 212, 0.35),
+      0 1px 0 rgba(255,255,255,0.4) inset,
+      0 -10px 24px -20px rgba(0,0,0,0.3) inset;
     -webkit-tap-highlight-color: transparent;
-    width: auto;
-    max-width: 100%;
   }
   .cta:hover, .cta:focus-visible {
     transform: translateY(-2px);
-    box-shadow: 0 18px 44px -8px rgba(28, 105, 212, 0.5), inset 0 1px 0 rgba(255,255,255,0.6);
+    box-shadow:
+      0 16px 40px -10px rgba(28, 105, 212, 0.55),
+      0 1px 0 rgba(255,255,255,0.4) inset,
+      0 -10px 24px -20px rgba(0,0,0,0.3) inset;
     outline: none;
   }
   .cta:active { transform: translateY(0) scale(0.98); }
   .cta-text {
     font-family: 'Bebas Neue', sans-serif;
-    font-size: 28px;
+    font-size: 26px;
     letter-spacing: 0.04em;
+    line-height: 1;
   }
-  .cta-arrow {
+  .cta-dot {
     display: inline-flex;
     width: 28px; height: 28px;
     border-radius: 50%;
-    background: #000;
-    color: #fff;
+    background: var(--bg-0);
+    color: var(--ink);
     align-items: center; justify-content: center;
     font-size: 14px;
-    transition: transform 0.25s var(--apple-spring);
+    transition: transform 0.25s var(--spring);
   }
-  .cta:hover .cta-arrow { transform: translateX(4px); }
+  .cta:hover .cta-dot { transform: translateX(4px); }
 
+  /* Meta strip: no boxes; vertical hairline dividers; labels above values. */
   .meta-strip {
     margin-top: clamp(40px, 7vh, 64px);
+    border-top: 1px solid var(--hairline);
+    border-bottom: 1px solid var(--hairline);
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 1px;
-    background: var(--hairline);
-    border: 1px solid var(--hairline);
-    border-radius: var(--radius-md);
-    overflow: hidden;
   }
   .meta-cell {
-    background: var(--bg-1);
-    padding: 16px 12px;
+    padding: 18px 16px;
+    position: relative;
+  }
+  .meta-cell + .meta-cell {
+    border-left: 1px solid var(--hairline);
   }
   .meta-key {
-    font-size: 9.5px;
-    letter-spacing: 0.16em;
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
     color: var(--ink-faint);
-    margin-bottom: 6px;
+    margin-bottom: 8px;
   }
   .meta-val {
     font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(18px, 5vw, 22px);
+    font-size: clamp(20px, 5vw, 26px);
     letter-spacing: 0.04em;
+    color: var(--ink);
   }
 
-  /* QUESTIONS */
+  /* ── QUESTIONS ───────────────────────────────────── */
   .progress {
     display: flex;
     gap: 6px;
-    margin: 24px 0 36px;
+    margin: 24px 0 32px;
   }
   .progress-bar {
     flex: 1;
     height: 3px;
-    background: rgba(255, 255, 255, 0.08);
+    background: var(--hairline);
     border-radius: 999px;
     overflow: hidden;
     position: relative;
@@ -302,22 +381,36 @@
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(90deg, var(--bmw-blue-light), var(--bmw-blue));
+    background: linear-gradient(90deg, var(--bmw-soft), var(--bmw));
     transform: scaleX(0);
     transform-origin: left;
-    transition: transform 0.5s var(--apple-spring);
+    transition: transform 0.55s var(--spring);
   }
   .progress-bar.active::after { transform: scaleX(1); }
 
+  .q-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 14px;
+    gap: 12px;
+  }
   .q-count {
-    font-family: 'JetBrains Mono', monospace;
+    font-family: 'Geist Mono', monospace;
     font-size: 11px;
     color: var(--ink-faint);
-    letter-spacing: 0.08em;
-    margin-bottom: 12px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+  .q-hint {
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-quiet);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
   }
   .q-label {
-    font-size: clamp(36px, 10vw, 64px);
+    font-size: clamp(36px, 9.5vw, 64px);
     margin-bottom: clamp(20px, 4vh, 32px);
     line-height: 1;
   }
@@ -332,45 +425,59 @@
   .option {
     text-align: left;
     padding: 18px 20px;
-    min-height: 72px;
+    min-height: 76px;
     border: 1px solid var(--hairline);
     background: var(--surface);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     color: var(--ink);
     cursor: pointer;
-    transition: all 0.22s var(--apple-spring);
     font-family: inherit;
-    border-radius: var(--radius-md);
+    border-radius: var(--r-sm);
     position: relative;
     overflow: hidden;
     -webkit-tap-highlight-color: transparent;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    box-shadow:
+      inset 0 1px 0 var(--refract-top),
+      inset 0 -1px 0 var(--refract-bot);
+    opacity: 0;
+    transform: translateY(8px);
+    animation: option-in 0.5s var(--spring) forwards;
+    animation-delay: calc(var(--i, 0) * 55ms);
+    transition:
+      transform 0.22s var(--spring),
+      border-color 0.22s var(--ease),
+      background-color 0.22s var(--ease);
+  }
+  @keyframes option-in {
+    to { opacity: 1; transform: translateY(0); }
   }
   .option::before {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, rgba(28,105,212,0.18) 0%, transparent 60%);
+    background: linear-gradient(135deg, rgba(28,105,212,0.16) 0%, transparent 55%);
     opacity: 0;
-    transition: opacity 0.25s var(--apple-ease);
+    transition: opacity 0.25s var(--ease);
+    pointer-events: none;
   }
   .option:hover, .option:focus-visible {
-    border-color: var(--hairline-strong);
+    border-color: var(--hairline-mid);
     transform: translateY(-2px);
     background: var(--surface-strong);
     outline: none;
   }
   .option:hover::before, .option:focus-visible::before { opacity: 1; }
-  .option:active { transform: translateY(0) scale(0.98); }
+  .option:active { transform: translateY(-1px) scale(0.985); }
   .option-num {
-    font-family: 'JetBrains Mono', monospace;
+    font-family: 'Geist Mono', monospace;
     font-size: 10px;
     color: var(--ink-faint);
     margin-bottom: 8px;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.16em;
     position: relative;
   }
   .option-text {
@@ -383,8 +490,9 @@
 
   .back-btn {
     margin-top: 24px;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Geist', sans-serif;
     font-size: 14px;
+    font-weight: 500;
     background: none;
     border: none;
     color: var(--ink-dim);
@@ -393,123 +501,174 @@
     min-height: 44px;
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
     transition: color 0.2s;
     -webkit-tap-highlight-color: transparent;
   }
   .back-btn:hover { color: var(--ink); }
-  .back-btn .arrow {
-    transition: transform 0.2s var(--apple-ease);
-  }
-  .back-btn:hover .arrow { transform: translateX(-3px); }
+  .back-btn .i { font-size: 16px; transition: transform 0.2s var(--ease); }
+  .back-btn:hover .i { transform: translateX(-3px); }
 
-  /* GENERATING */
-  .gen-wrap {
-    text-align: center;
-    padding: 72px 24px 80px;
-    position: relative;
+  /* ── GENERATING (skeleton + step log) ────────────── */
+  .gen {
+    padding-top: 8px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 32px;
   }
-  .gen-orb {
-    width: 140px;
-    height: 140px;
-    margin: 0 auto 36px;
-    border-radius: 50%;
-    position: relative;
-    background: radial-gradient(circle at 30% 30%, var(--bmw-blue-light), var(--bmw-blue) 50%, #0a3a8a 80%);
-    box-shadow:
-      0 0 80px 10px rgba(28, 105, 212, 0.45),
-      inset 0 -20px 40px rgba(0,0,0,0.5),
-      inset 0 20px 40px rgba(255,255,255,0.2);
-    animation: orbPulse 2.4s ease-in-out infinite;
+  @media (min-width: 720px) {
+    .gen {
+      grid-template-columns: minmax(0, 1.4fr) minmax(220px, 1fr);
+      gap: 40px;
+      align-items: start;
+    }
   }
-  .gen-orb::after {
-    content: '';
-    position: absolute;
-    inset: -20px;
-    border-radius: 50%;
-    border: 1px solid rgba(74, 154, 255, 0.18);
-    animation: orbRing 2.4s ease-in-out infinite;
-  }
-  @keyframes orbPulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.06); }
-  }
-  @keyframes orbRing {
-    0%, 100% { opacity: 0.4; transform: scale(1); }
-    50% { opacity: 0.1; transform: scale(1.15); }
+  .gen-head {
+    margin-bottom: 20px;
   }
   .gen-tag {
-    font-family: 'JetBrains Mono', monospace;
+    font-family: 'Geist Mono', monospace;
     font-size: 11px;
-    color: var(--ink-faint);
     letter-spacing: 0.18em;
     text-transform: uppercase;
-    margin-bottom: 14px;
+    color: var(--ink-faint);
+    margin-bottom: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .gen-tag .live-dot {
+    display: inline-block; width: 6px; height: 6px; border-radius: 50%;
+    background: var(--bmw-soft);
+    animation: pulse 1.4s ease-in-out infinite;
   }
   .gen-title {
-    font-size: clamp(56px, 12vw, 96px);
-    margin-bottom: 32px;
+    font-size: clamp(48px, 10vw, 80px);
+    margin-bottom: 6px;
   }
-  .gen-log {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
-    max-width: 280px;
-    margin: 0 auto;
-    text-align: left;
+  .gen-sub {
+    font-family: 'Geist', sans-serif;
+    font-size: 14px;
     color: var(--ink-dim);
+  }
+
+  .skel {
+    background: linear-gradient(110deg,
+      var(--surface) 0%,
+      var(--surface-strong) 40%,
+      var(--surface) 80%);
+    background-size: 200% 100%;
+    animation: shimmer 1.8s linear infinite;
+    border-radius: var(--r-sm);
+    border: 1px solid var(--hairline);
+    box-shadow: inset 0 1px 0 var(--refract-top);
+  }
+  @keyframes shimmer {
+    from { background-position: 200% 0; }
+    to   { background-position: -200% 0; }
+  }
+  .skel-image {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    border-radius: var(--r-md);
+    margin-bottom: 14px;
+  }
+  @media (min-width: 720px) {
+    .skel-image { aspect-ratio: 4 / 3; }
+  }
+  .skel-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  @media (max-width: 600px) { .skel-row { grid-template-columns: repeat(2, 1fr); } }
+  .skel-chip { height: 52px; border-radius: var(--r-xs); }
+  .skel-line { height: 12px; border-radius: 6px; margin-bottom: 8px; }
+  .skel-line.w-90 { width: 92%; }
+  .skel-line.w-70 { width: 72%; }
+  .skel-line.w-50 { width: 54%; }
+
+  .gen-log {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
   }
   .gen-log-item {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 6px 0;
-    opacity: 0.35;
-    transition: opacity 0.35s var(--apple-ease);
-  }
-  .gen-log-item.done { opacity: 1; }
-  .gen-log-item.done .gen-check { color: var(--bmw-blue-light); }
-  .gen-log-item.active {
-    opacity: 1;
-    color: var(--ink);
-  }
-  .gen-log-item.active .gen-check {
-    animation: spin 1s linear infinite;
-    color: var(--ink);
-  }
-  .gen-check {
-    display: inline-block;
-    width: 14px;
+    gap: 12px;
+    padding: 10px 0;
+    border-top: 1px solid var(--hairline);
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px;
     color: var(--ink-faint);
-    text-align: center;
+    transition: color 0.3s var(--ease);
   }
-  @keyframes spin {
-    from { transform: rotate(0); }
-    to { transform: rotate(360deg); }
+  .gen-log-item:last-child { border-bottom: 1px solid var(--hairline); }
+  .gen-log-item.done   { color: var(--ink-dim); }
+  .gen-log-item.active { color: var(--ink); }
+  .gen-log-ic {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 1px solid var(--hairline-mid);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: var(--ink-faint);
   }
+  .gen-log-item.done .gen-log-ic {
+    background: var(--bmw);
+    border-color: var(--bmw);
+    color: var(--ink);
+  }
+  .gen-log-item.active .gen-log-ic {
+    border-color: var(--ink);
+    color: var(--ink);
+    position: relative;
+  }
+  .gen-log-item.active .gen-log-ic::after {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: 50%;
+    border: 1.5px solid transparent;
+    border-top-color: var(--ink);
+    animation: spin 0.9s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .gen-log-ic .i { font-size: 10px; }
 
-  /* RESULT */
+  /* ── RESULT ──────────────────────────────────────── */
   .result-eyebrow {
-    font-family: 'JetBrains Mono', monospace;
+    font-family: 'Geist Mono', monospace;
     font-size: 11px;
     color: var(--ink-faint);
     letter-spacing: 0.18em;
     text-transform: uppercase;
-    margin: 16px 0 8px;
+    margin: 16px 0 10px;
   }
   .result-title {
-    font-size: clamp(48px, 10vw, 80px);
+    font-size: clamp(48px, 10vw, 84px);
     margin-bottom: 28px;
   }
   .result-img-wrap {
     border: 1px solid var(--hairline);
-    border-radius: var(--radius-lg);
+    border-radius: var(--r-md);
     overflow: hidden;
     background: var(--bg-2);
-    margin-bottom: 24px;
-    aspect-ratio: 1 / 1;
+    margin-bottom: 28px;
+    aspect-ratio: 4 / 5;
     position: relative;
-    box-shadow: 0 30px 80px -20px rgba(0,0,0,0.6);
+    box-shadow:
+      0 30px 80px -22px rgba(6, 16, 38, 0.7),
+      inset 0 1px 0 var(--refract-top);
     max-height: 80vh;
+  }
+  @media (min-width: 720px) {
+    .result-img-wrap { aspect-ratio: 4 / 3; }
   }
   .result-img-wrap img {
     width: 100%;
@@ -518,61 +677,63 @@
     object-fit: cover;
   }
 
+  /* Spec list — no boxes; divide-y pattern. */
   .specs {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
     margin-bottom: 28px;
+    border-top: 1px solid var(--hairline);
   }
-  @media (max-width: 600px) { .specs { grid-template-columns: repeat(2, 1fr); } }
-  @media (max-width: 360px) { .specs { grid-template-columns: 1fr; } }
   .spec {
-    border: 1px solid var(--hairline);
-    background: var(--surface);
-    padding: 14px 16px;
-    border-radius: var(--radius-sm);
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: 16px;
+    align-items: baseline;
+    padding: 14px 4px;
+    border-bottom: 1px solid var(--hairline);
+  }
+  @media (max-width: 420px) {
+    .spec { grid-template-columns: 86px 1fr; gap: 12px; }
   }
   .spec-key {
-    font-size: 9px;
-    letter-spacing: 0.18em;
+    font-family: 'Geist Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
     color: var(--ink-faint);
-    margin-bottom: 4px;
   }
   .spec-val {
     font-family: 'Bebas Neue', sans-serif;
-    font-size: 18px;
+    font-size: clamp(18px, 5vw, 22px);
     letter-spacing: 0.04em;
+    color: var(--ink);
     line-height: 1.1;
   }
 
+  /* Prompt as a left-rule pull-quote, not a box. */
   .prompt-box {
-    border: 1px solid var(--hairline);
-    background: var(--surface);
-    padding: 18px 20px;
-    border-radius: var(--radius-md);
-    margin-bottom: 28px;
-    position: relative;
+    padding: 6px 0 6px 18px;
+    border-left: 2px solid var(--bmw-soft);
+    margin-bottom: 32px;
   }
   .prompt-box .label {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 9px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
     letter-spacing: 0.18em;
     text-transform: uppercase;
-    color: var(--bmw-blue-light);
-    margin-bottom: 8px;
+    color: var(--bmw-soft);
+    margin-bottom: 6px;
   }
   .prompt-box .prompt-text {
     font-size: 14px;
-    line-height: 1.55;
+    line-height: 1.6;
     color: var(--ink-dim);
     font-weight: 400;
+    max-width: 65ch;
   }
 
   .actions { display: flex; gap: 10px; flex-wrap: wrap; }
   .action-btn {
-    flex: 1 1 140px;
-    font-family: 'Inter', sans-serif;
+    flex: 1 1 160px;
+    font-family: 'Geist', sans-serif;
     font-weight: 500;
     font-size: 14px;
     padding: 16px 18px;
@@ -581,38 +742,48 @@
     background: var(--surface);
     color: var(--ink);
     cursor: pointer;
-    transition: all 0.22s var(--apple-spring);
+    transition: transform 0.18s var(--spring), background-color 0.22s var(--ease), border-color 0.22s var(--ease);
     border-radius: 999px;
-    letter-spacing: 0.01em;
+    letter-spacing: -0.005em;
     -webkit-tap-highlight-color: transparent;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    box-shadow: inset 0 1px 0 var(--refract-top);
   }
   .action-btn:hover, .action-btn:focus-visible {
     background: var(--surface-strong);
-    border-color: var(--hairline-strong);
+    border-color: var(--hairline-mid);
     transform: translateY(-1px);
     outline: none;
   }
   .action-btn:active { transform: translateY(0) scale(0.98); }
+  .action-btn .i { font-size: 16px; }
   .action-btn.primary {
-    background: linear-gradient(180deg, var(--bmw-blue-light) 0%, var(--bmw-blue) 100%);
-    color: #fff;
+    background: linear-gradient(180deg, var(--bmw-soft) 0%, var(--bmw) 100%);
+    color: var(--ink);
     border-color: transparent;
-    box-shadow: 0 10px 28px -8px rgba(28, 105, 212, 0.55);
+    box-shadow:
+      0 12px 28px -12px rgba(28, 105, 212, 0.6),
+      inset 0 1px 0 rgba(255,255,255,0.2);
   }
   .action-btn.primary:hover {
-    box-shadow: 0 18px 36px -8px rgba(28, 105, 212, 0.7);
+    box-shadow:
+      0 18px 36px -12px rgba(28, 105, 212, 0.75),
+      inset 0 1px 0 rgba(255,255,255,0.2);
   }
 
-  /* GALLERY */
+  /* ── GALLERY ─────────────────────────────────────── */
   .gallery-head {
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
-    margin-bottom: 32px;
+    margin-bottom: 28px;
     gap: 16px;
   }
   .gallery-eyebrow {
-    font-family: 'JetBrains Mono', monospace;
+    font-family: 'Geist Mono', monospace;
     font-size: 11px;
     color: var(--ink-faint);
     letter-spacing: 0.18em;
@@ -620,11 +791,11 @@
     margin-bottom: 6px;
   }
   .gallery-title {
-    font-size: clamp(40px, 7vw, 64px);
+    font-size: clamp(40px, 7.5vw, 64px);
     line-height: 0.95;
   }
   .gallery-count {
-    font-family: 'JetBrains Mono', monospace;
+    font-family: 'Geist Mono', monospace;
     font-size: 11px;
     color: var(--ink-dim);
     letter-spacing: 0.06em;
@@ -636,147 +807,141 @@
     gap: 12px;
   }
   @media (min-width: 560px) {
-    .gallery-grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
+    .gallery-grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
   }
   .gallery-item {
-    border: 1px solid var(--hairline);
-    background: var(--bg-2);
-    border-radius: var(--radius-md);
-    overflow: hidden;
-    transition: all 0.25s var(--apple-spring);
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
+    transition: transform 0.25s var(--spring);
   }
-  .gallery-item:hover {
-    border-color: var(--hairline-strong);
-    transform: translateY(-3px);
-    box-shadow: 0 20px 40px -10px rgba(0,0,0,0.4);
+  .gallery-item:hover { transform: translateY(-3px); }
+  .gallery-item .img-wrap {
+    aspect-ratio: 1;
+    background: var(--bg-2);
+    border-radius: var(--r-sm);
+    overflow: hidden;
+    border: 1px solid var(--hairline);
+    box-shadow: inset 0 1px 0 var(--refract-top);
+    transition: border-color 0.22s var(--ease), box-shadow 0.25s var(--ease);
   }
-  .gallery-item .img-wrap { aspect-ratio: 1; background: var(--bg-2); }
+  .gallery-item:hover .img-wrap {
+    border-color: var(--hairline-mid);
+    box-shadow:
+      0 20px 40px -14px rgba(0,0,0,0.55),
+      inset 0 1px 0 var(--refract-top);
+  }
   .gallery-item img { width: 100%; height: 100%; display: block; object-fit: cover; }
-  .gallery-meta { padding: 14px 16px; }
+  .gallery-meta { padding: 12px 4px 0; }
   .gallery-model {
     font-family: 'Bebas Neue', sans-serif;
     font-size: 20px;
     letter-spacing: 0.04em;
     margin-bottom: 4px;
+    line-height: 1;
   }
   .gallery-color {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 10.5px;
     color: var(--ink-dim);
     letter-spacing: 0.06em;
   }
+
   .empty {
     text-align: center;
-    padding: 96px 24px;
+    padding: 80px 24px;
     color: var(--ink-faint);
     border: 1px dashed var(--hairline);
-    border-radius: var(--radius-lg);
+    border-radius: var(--r-md);
   }
-  .empty-icon {
-    font-size: 48px;
-    margin-bottom: 12px;
-    opacity: 0.5;
-  }
+  .empty .i { font-size: 28px; opacity: 0.5; margin-bottom: 12px; }
   .empty-text {
-    font-family: 'JetBrains Mono', monospace;
+    font-family: 'Geist Mono', monospace;
     font-size: 11px;
     letter-spacing: 0.18em;
     text-transform: uppercase;
   }
 
+  /* ── ERROR ───────────────────────────────────────── */
   .error {
     padding: 14px 16px;
-    border: 1px solid rgba(226, 43, 52, 0.4);
-    background: rgba(226, 43, 52, 0.08);
+    border: 1px solid rgba(216, 35, 47, 0.4);
+    background: rgba(216, 35, 47, 0.06);
     color: #ff8a91;
-    font-family: 'JetBrains Mono', monospace;
+    font-family: 'Geist Mono', monospace;
     font-size: 12px;
     margin-top: 20px;
-    border-radius: var(--radius-sm);
+    border-radius: var(--r-sm);
     line-height: 1.5;
   }
 
+  /* ── LIGHTBOX ────────────────────────────────────── */
   .lightbox {
     position: fixed;
     inset: 0;
-    background: rgba(5, 5, 7, 0.85);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    background: rgba(6, 7, 11, 0.86);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
     display: none;
     align-items: center;
     justify-content: center;
     z-index: 100;
     padding: 24px;
-    animation: fadeIn 0.3s var(--apple-ease);
+    animation: fade 0.3s var(--ease);
   }
   .lightbox.active { display: flex; }
   .lightbox-img {
-    max-width: 90vw;
-    max-height: 85vh;
-    border-radius: var(--radius-lg);
-    box-shadow: 0 30px 100px rgba(0,0,0,0.6);
+    max-width: 92vw;
+    max-height: 86vh;
+    border-radius: var(--r-md);
+    box-shadow: 0 30px 100px rgba(0,0,0,0.65);
   }
   .lightbox-close {
     position: absolute;
-    top: 20px; right: 20px;
-    width: 40px; height: 40px;
+    top: max(20px, env(safe-area-inset-top));
+    right: 20px;
+    width: 42px; height: 42px;
     border-radius: 50%;
-    background: rgba(255,255,255,0.1);
-    border: 1px solid var(--hairline-strong);
-    color: #fff;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid var(--hairline-mid);
+    color: var(--ink);
     cursor: pointer;
-    font-size: 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     backdrop-filter: blur(20px);
+    transition: transform 0.18s var(--spring), background-color 0.2s;
   }
-  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .lightbox-close:hover { background: rgba(255,255,255,0.14); }
+  .lightbox-close:active { transform: scale(0.94); }
+  .lightbox-close .i { font-size: 18px; }
+  @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
 
   footer {
     text-align: center;
     padding: 32px 24px 48px;
-    font-family: 'JetBrains Mono', monospace;
+    font-family: 'Geist Mono', monospace;
     font-size: 10px;
     color: var(--ink-faint);
     letter-spacing: 0.14em;
     text-transform: uppercase;
   }
 
-  @media (max-width: 600px) {
-    .container { padding: 20px 18px; }
-    .container-wide { padding: 20px 18px; }
-    .progress { margin: 18px 0 24px; }
-    .progress-bar { height: 4px; }
-    .gallery-head { flex-direction: column; align-items: flex-start; gap: 6px; }
-    .gallery-count { text-align: left; }
-    .prompt-box { padding: 14px 16px; }
-    .gen-wrap { padding: 56px 20px 64px; }
-    .gen-orb { width: 120px; height: 120px; margin-bottom: 28px; }
-    .gen-title { margin-bottom: 24px; }
-    .result-img-wrap { aspect-ratio: 4 / 5; max-height: 70vh; margin-bottom: 20px; }
-  }
+  /* Compact phones. */
   @media (max-width: 380px) {
     .container { padding: 16px 14px; }
     .logo-text { display: none; }
-    .meta-cell { padding: 14px 10px; }
-    .meta-key { font-size: 9px; letter-spacing: 0.12em; }
     .option { padding: 16px 18px; min-height: 64px; }
-    .nav-btn { padding: 9px 12px; font-size: 11.5px; }
-    .gen-orb { width: 104px; height: 104px; }
+    .nav-btn { padding: 9px 12px; font-size: 12px; }
     .actions { gap: 8px; }
     .action-btn { flex-basis: 100%; }
   }
-  @media (max-height: 720px) and (orientation: portrait) {
-    .hero-eyebrow { margin-top: 24px; }
-    .meta-strip { margin-top: 32px; }
-  }
+
+  /* Landscape pocket. */
   @media (orientation: landscape) and (max-height: 500px) {
     .hero-title { font-size: clamp(40px, 9vw, 72px); }
     .hero-eyebrow { margin-top: 16px; }
     .meta-strip { margin-top: 24px; }
-    .gen-wrap { padding: 32px 20px; }
-    .gen-orb { width: 80px; height: 80px; margin-bottom: 16px; }
-    .gen-title { font-size: 48px; margin-bottom: 16px; }
+    .gen-title { font-size: 48px; }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -790,10 +955,24 @@
 </head>
 <body>
 
+<!-- Inline icon symbols. Referenced via <svg class="i"><use href="#i-foo"/></svg>. -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+    <symbol id="i-arrow-left"  viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6"/></symbol>
+    <symbol id="i-refresh"     viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 15.5-6.3M21 4v5h-5M21 12a9 9 0 0 1-15.5 6.3M3 20v-5h5"/></symbol>
+    <symbol id="i-check"       viewBox="0 0 24 24"><path d="M5 12l4.5 4.5L19 7"/></symbol>
+    <symbol id="i-close"       viewBox="0 0 24 24"><path d="M6 6l12 12M6 18L18 6"/></symbol>
+    <symbol id="i-grid"        viewBox="0 0 24 24"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z"/></symbol>
+    <symbol id="i-arrow-up-r"  viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></symbol>
+    <symbol id="i-empty"       viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" stroke-dasharray="3 4"/></symbol>
+  </defs>
+</svg>
+
 <div class="ambient" aria-hidden="true">
-  <div class="orb orb-1"></div>
-  <div class="orb orb-2"></div>
-  <div class="orb orb-3"></div>
+  <div class="glow glow-a"></div>
+  <div class="glow glow-b"></div>
+  <div class="glow glow-c"></div>
 </div>
 
 <div class="stripe" aria-hidden="true"></div>
@@ -805,61 +984,103 @@
       <span class="roundel-q tr"></span>
       <span class="roundel-q bl"></span>
       <span class="roundel-q br"></span>
-      <span class="roundel-inner"></span>
     </div>
     <div class="logo-text">AI Configurator</div>
   </div>
   <div class="nav-actions">
-    <button class="nav-btn" id="galleryBtn" type="button">Gallery · 0</button>
+    <button class="nav-btn" id="galleryBtn" type="button">
+      <svg class="i"><use href="#i-grid"/></svg>
+      <span id="galleryBtnLabel">Gallery&nbsp;·&nbsp;0</span>
+    </button>
   </div>
 </nav>
 
+<!-- START -->
 <section class="view active" id="view-start" aria-labelledby="hero-title">
   <div class="container">
-    <div class="hero-eyebrow"><span class="dot"></span>Session 001 · Ready</div>
-    <h1 class="display hero-title" id="hero-title">Build your<br><span class="blue">BMW</span> with AI.</h1>
-    <p class="hero-desc">Six questions. One image model. A one-of-one render of the BMW you'd actually want — built in under a minute.</p>
-    <button class="cta" type="button" id="startBtn">
-      <span class="cta-text">Start Configuration</span>
-      <span class="cta-arrow" aria-hidden="true">→</span>
-    </button>
+    <div class="hero">
+      <div class="hero-main">
+        <div class="hero-eyebrow"><span class="pulse"></span>Session 001 · Ready</div>
+        <h1 class="display hero-title" id="hero-title">Build your<br><span class="accent">BMW</span> with AI.</h1>
+        <p class="hero-desc">Six questions. One image model. A one-of-one render of the BMW you'd actually want — built in under a minute.</p>
+        <button class="cta" type="button" id="startBtn">
+          <span class="cta-text">Start Configuration</span>
+          <span class="cta-dot" aria-hidden="true"><svg class="i" style="font-size:14px"><use href="#i-arrow-right"/></svg></span>
+        </button>
+      </div>
+      <div class="hero-aside" aria-hidden="true">BMW.AI · 001 / 006</div>
+    </div>
+
     <div class="meta-strip" aria-hidden="true">
-      <div class="meta-cell"><div class="meta-key">Time</div><div class="meta-val">~30 s</div></div>
+      <div class="meta-cell"><div class="meta-key">Time</div><div class="meta-val">~30s</div></div>
       <div class="meta-cell"><div class="meta-key">Questions</div><div class="meta-val">06</div></div>
-      <div class="meta-cell"><div class="meta-key">Output</div><div class="meta-val">AI Render</div></div>
+      <div class="meta-cell"><div class="meta-key">Output</div><div class="meta-val">AI&nbsp;Render</div></div>
     </div>
   </div>
 </section>
 
+<!-- QUESTIONS -->
 <section class="view" id="view-questions" aria-labelledby="q-label">
   <div class="container">
     <div class="progress" id="progress" aria-hidden="true"></div>
-    <div class="q-count" id="qCount"></div>
+    <div class="q-meta">
+      <div class="q-count" id="qCount"></div>
+      <div class="q-hint">Tap to choose</div>
+    </div>
     <h2 class="display q-label" id="q-label"></h2>
     <div class="options" id="options" role="list"></div>
     <button class="back-btn" id="backBtn" type="button" hidden>
-      <span class="arrow">←</span> Back
+      <svg class="i"><use href="#i-arrow-left"/></svg> Back
     </button>
     <div class="error" id="qError" hidden></div>
   </div>
 </section>
 
+<!-- GENERATING -->
 <section class="view" id="view-generating" aria-live="polite">
   <div class="container">
-    <div class="gen-wrap">
-      <div class="gen-orb" aria-hidden="true"></div>
-      <div class="gen-tag">Rendering Vehicle</div>
-      <div class="display gen-title">Generating</div>
+    <div class="gen-head">
+      <div class="gen-tag"><span class="live-dot"></span>Rendering Vehicle</div>
+      <div class="display gen-title">Generating.</div>
+      <div class="gen-sub">Holding the canvas while the model paints.</div>
+    </div>
+
+    <div class="gen">
+      <div>
+        <div class="skel skel-image"></div>
+        <div class="skel-row">
+          <div class="skel skel-chip"></div>
+          <div class="skel skel-chip"></div>
+          <div class="skel skel-chip"></div>
+        </div>
+        <div class="skel skel-line w-90"></div>
+        <div class="skel skel-line w-70"></div>
+        <div class="skel skel-line w-50"></div>
+      </div>
+
       <div class="gen-log" id="genLog">
-        <div class="gen-log-item" data-step="0"><span class="gen-check">○</span><span>Analyzing preferences</span></div>
-        <div class="gen-log-item" data-step="1"><span class="gen-check">○</span><span>Composing prompt</span></div>
-        <div class="gen-log-item" data-step="2"><span class="gen-check">○</span><span>Querying model</span></div>
-        <div class="gen-log-item" data-step="3"><span class="gen-check">○</span><span>Rendering image</span></div>
+        <div class="gen-log-item" data-step="0">
+          <span class="gen-log-ic"></span>
+          <span>Analyzing preferences</span>
+        </div>
+        <div class="gen-log-item" data-step="1">
+          <span class="gen-log-ic"></span>
+          <span>Composing prompt</span>
+        </div>
+        <div class="gen-log-item" data-step="2">
+          <span class="gen-log-ic"></span>
+          <span>Querying model</span>
+        </div>
+        <div class="gen-log-item" data-step="3">
+          <span class="gen-log-ic"></span>
+          <span>Rendering image</span>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
+<!-- RESULT -->
 <section class="view" id="view-result" aria-labelledby="result-title">
   <div class="container">
     <div class="result-eyebrow">Your BMW · Render</div>
@@ -873,12 +1094,17 @@
       <div class="prompt-text" id="resultPrompt"></div>
     </div>
     <div class="actions">
-      <button class="action-btn" type="button" id="rebuildBtn">↻ Build Another</button>
-      <button class="action-btn primary" type="button" id="seeGalleryBtn">See Gallery →</button>
+      <button class="action-btn" type="button" id="rebuildBtn">
+        <svg class="i"><use href="#i-refresh"/></svg> Build Another
+      </button>
+      <button class="action-btn primary" type="button" id="seeGalleryBtn">
+        See Gallery <svg class="i"><use href="#i-arrow-right"/></svg>
+      </button>
     </div>
   </div>
 </section>
 
+<!-- GALLERY -->
 <section class="view" id="view-gallery" aria-labelledby="gallery-title">
   <div class="container-wide">
     <div class="gallery-head">
@@ -890,13 +1116,18 @@
     </div>
     <div id="galleryContent"></div>
     <div style="margin-top: 32px;">
-      <button class="action-btn" type="button" id="backHomeBtn">← Back to Start</button>
+      <button class="action-btn" type="button" id="backHomeBtn">
+        <svg class="i"><use href="#i-arrow-left"/></svg> Back to Start
+      </button>
     </div>
   </div>
 </section>
 
+<!-- LIGHTBOX -->
 <div class="lightbox" id="lightbox" role="dialog" aria-modal="true">
-  <button class="lightbox-close" id="lightboxClose" type="button" aria-label="Close">✕</button>
+  <button class="lightbox-close" id="lightboxClose" type="button" aria-label="Close">
+    <svg class="i"><use href="#i-close"/></svg>
+  </button>
   <img id="lightboxImg" class="lightbox-img" src="" alt="" />
 </div>
 
@@ -940,7 +1171,6 @@
       return Array.isArray(parsed) ? parsed : [];
     } catch { return []; }
   }
-
   function saveGallery() {
     try { localStorage.setItem(LS_KEY, JSON.stringify(gallery)); } catch {}
   }
@@ -952,12 +1182,22 @@
     if (opts.text != null) node.textContent = opts.text;
     if (opts.attrs) for (const [k, v] of Object.entries(opts.attrs)) node.setAttribute(k, v);
     if (opts.dataset) for (const [k, v] of Object.entries(opts.dataset)) node.dataset[k] = v;
+    if (opts.style) for (const [k, v] of Object.entries(opts.style)) node.style.setProperty(k, v);
     if (opts.onClick) node.addEventListener('click', opts.onClick);
     for (const child of children) {
       if (child == null) continue;
       node.appendChild(child instanceof Node ? child : document.createTextNode(String(child)));
     }
     return node;
+  }
+  function icon(id) {
+    const ns = 'http://www.w3.org/2000/svg';
+    const svg = document.createElementNS(ns, 'svg');
+    svg.setAttribute('class', 'i');
+    const use = document.createElementNS(ns, 'use');
+    use.setAttribute('href', '#' + id);
+    svg.appendChild(use);
+    return svg;
   }
   function clear(node) { while (node.firstChild) node.removeChild(node.firstChild); }
 
@@ -991,7 +1231,12 @@
     clear(opts);
     q.options.forEach((opt, i) => {
       const btn = el('button',
-        { className: 'option', attrs: { type: 'button', role: 'listitem' }, onClick: () => selectOption(opt) },
+        {
+          className: 'option',
+          attrs: { type: 'button', role: 'listitem' },
+          style: { '--i': String(i) },
+          onClick: () => selectOption(opt)
+        },
         el('div', { className: 'option-num', text: String(i + 1).padStart(2, '0') }),
         el('div', { className: 'option-text', text: opt })
       );
@@ -1027,15 +1272,13 @@
     const items = $('genLog').querySelectorAll('.gen-log-item');
     items.forEach((node, i) => {
       node.classList.remove('active', 'done');
-      const check = node.querySelector('.gen-check');
+      const ic = node.querySelector('.gen-log-ic');
+      clear(ic);
       if (i < active) {
         node.classList.add('done');
-        check.textContent = '✓';
+        ic.appendChild(icon('i-check'));
       } else if (i === active) {
         node.classList.add('active');
-        check.textContent = '◐';
-      } else {
-        check.textContent = '○';
       }
     });
   }
@@ -1100,11 +1343,11 @@
     const specs = $('resultSpecs');
     clear(specs);
     Object.entries(entry.answers).forEach(([k, v]) => {
-      const card = el('div', { className: 'spec' },
+      const row = el('div', { className: 'spec' },
         el('div', { className: 'spec-key', text: SPEC_LABELS[k] || k }),
         el('div', { className: 'spec-val', text: v })
       );
-      specs.appendChild(card);
+      specs.appendChild(row);
     });
 
     show('view-result');
@@ -1129,7 +1372,7 @@
 
     if (n === 0) {
       const empty = el('div', { className: 'empty' },
-        el('div', { className: 'empty-icon', text: '◌' }),
+        icon('i-empty'),
         el('div', { className: 'empty-text', text: 'No builds yet' })
       );
       content.appendChild(empty);
@@ -1155,7 +1398,7 @@
   }
 
   function updateGalleryCount() {
-    $('galleryBtn').textContent = `Gallery · ${gallery.length}`;
+    $('galleryBtnLabel').textContent = `Gallery · ${gallery.length}`;
   }
 
   function openLightbox(url, answers) {
