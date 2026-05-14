@@ -47,6 +47,9 @@
     min-height: 100dvh;
     letter-spacing: -0.01em;
     overscroll-behavior-y: contain;
+    text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+    padding-bottom: env(safe-area-inset-bottom);
   }
 
   .ambient {
@@ -98,7 +101,9 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 14px max(20px, env(safe-area-inset-left)) 14px max(20px, env(safe-area-inset-right));
+    gap: 12px;
+    padding: 12px max(16px, env(safe-area-inset-left)) 12px max(16px, env(safe-area-inset-right));
+    padding-top: max(12px, env(safe-area-inset-top));
     background: rgba(5, 5, 7, 0.65);
     backdrop-filter: saturate(180%) blur(20px);
     -webkit-backdrop-filter: saturate(180%) blur(20px);
@@ -141,7 +146,8 @@
     font-size: 12px;
     font-weight: 500;
     letter-spacing: 0.02em;
-    padding: 8px 14px;
+    padding: 10px 14px;
+    min-height: 36px;
     border: 1px solid var(--hairline);
     background: var(--surface);
     color: var(--ink);
@@ -149,6 +155,7 @@
     cursor: pointer;
     transition: all 0.2s var(--apple-ease);
     -webkit-tap-highlight-color: transparent;
+    white-space: nowrap;
   }
   .nav-btn:hover, .nav-btn:focus-visible {
     border-color: var(--hairline-strong);
@@ -176,7 +183,7 @@
     letter-spacing: 0.24em;
     text-transform: uppercase;
     color: var(--ink-faint);
-    margin: 56px 0 20px;
+    margin: clamp(28px, 8vh, 56px) 0 20px;
     display: flex;
     align-items: center;
     gap: 10px;
@@ -192,8 +199,8 @@
     50% { opacity: 1; transform: scale(1.15); }
   }
   .hero-title {
-    font-size: clamp(56px, 13vw, 144px);
-    margin-bottom: 24px;
+    font-size: clamp(52px, 14vw, 144px);
+    margin-bottom: clamp(16px, 3vh, 24px);
   }
   .hero-title .blue {
     background: linear-gradient(135deg, var(--bmw-blue-light) 0%, var(--bmw-blue) 60%, #0a3a8a 100%);
@@ -202,11 +209,11 @@
     color: transparent;
   }
   .hero-desc {
-    font-size: 17px;
+    font-size: clamp(15px, 4vw, 17px);
     line-height: 1.5;
     color: var(--ink-dim);
     max-width: 460px;
-    margin-bottom: 40px;
+    margin-bottom: clamp(28px, 5vh, 40px);
     font-weight: 400;
   }
   .cta {
@@ -215,7 +222,8 @@
     gap: 14px;
     background: linear-gradient(180deg, #ffffff 0%, #e6e6ea 100%);
     color: #000;
-    padding: 18px 26px 18px 28px;
+    padding: 16px 24px 16px 26px;
+    min-height: 56px;
     border: none;
     border-radius: 999px;
     cursor: pointer;
@@ -223,6 +231,8 @@
     transition: all 0.25s var(--apple-spring);
     box-shadow: 0 12px 36px -8px rgba(255,255,255,0.18), inset 0 1px 0 rgba(255,255,255,0.6);
     -webkit-tap-highlight-color: transparent;
+    width: auto;
+    max-width: 100%;
   }
   .cta:hover, .cta:focus-visible {
     transform: translateY(-2px);
@@ -248,7 +258,7 @@
   .cta:hover .cta-arrow { transform: translateX(4px); }
 
   .meta-strip {
-    margin-top: 64px;
+    margin-top: clamp(40px, 7vh, 64px);
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 1px;
@@ -259,18 +269,18 @@
   }
   .meta-cell {
     background: var(--bg-1);
-    padding: 18px 16px;
+    padding: 16px 12px;
   }
   .meta-key {
-    font-size: 10px;
-    letter-spacing: 0.18em;
+    font-size: 9.5px;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
     color: var(--ink-faint);
     margin-bottom: 6px;
   }
   .meta-val {
     font-family: 'Bebas Neue', sans-serif;
-    font-size: 22px;
+    font-size: clamp(18px, 5vw, 22px);
     letter-spacing: 0.04em;
   }
 
@@ -307,8 +317,8 @@
     margin-bottom: 12px;
   }
   .q-label {
-    font-size: clamp(40px, 9vw, 64px);
-    margin-bottom: 32px;
+    font-size: clamp(36px, 10vw, 64px);
+    margin-bottom: clamp(20px, 4vh, 32px);
     line-height: 1;
   }
   .options {
@@ -316,12 +326,13 @@
     grid-template-columns: repeat(2, 1fr);
     gap: 10px;
   }
-  @media (max-width: 520px) {
-    .options { grid-template-columns: 1fr; }
+  @media (max-width: 560px) {
+    .options { grid-template-columns: 1fr; gap: 8px; }
   }
   .option {
     text-align: left;
-    padding: 22px 22px;
+    padding: 18px 20px;
+    min-height: 72px;
     border: 1px solid var(--hairline);
     background: var(--surface);
     backdrop-filter: blur(10px);
@@ -334,6 +345,9 @@
     position: relative;
     overflow: hidden;
     -webkit-tap-highlight-color: transparent;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
   .option::before {
     content: '';
@@ -361,21 +375,22 @@
   }
   .option-text {
     font-family: 'Bebas Neue', sans-serif;
-    font-size: 24px;
+    font-size: clamp(22px, 6vw, 26px);
     letter-spacing: 0.04em;
-    line-height: 1;
+    line-height: 1.05;
     position: relative;
   }
 
   .back-btn {
-    margin-top: 28px;
+    margin-top: 24px;
     font-family: 'Inter', sans-serif;
-    font-size: 13px;
+    font-size: 14px;
     background: none;
     border: none;
     color: var(--ink-dim);
     cursor: pointer;
-    padding: 6px 0;
+    padding: 12px 0;
+    min-height: 44px;
     display: inline-flex;
     align-items: center;
     gap: 8px;
@@ -494,6 +509,7 @@
     aspect-ratio: 1 / 1;
     position: relative;
     box-shadow: 0 30px 80px -20px rgba(0,0,0,0.6);
+    max-height: 80vh;
   }
   .result-img-wrap img {
     width: 100%;
@@ -505,10 +521,11 @@
   .specs {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
+    gap: 8px;
     margin-bottom: 28px;
   }
   @media (max-width: 600px) { .specs { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 360px) { .specs { grid-template-columns: 1fr; } }
   .spec {
     border: 1px solid var(--hairline);
     background: var(--surface);
@@ -557,8 +574,9 @@
     flex: 1 1 140px;
     font-family: 'Inter', sans-serif;
     font-weight: 500;
-    font-size: 13px;
+    font-size: 14px;
     padding: 16px 18px;
+    min-height: 52px;
     border: 1px solid var(--hairline);
     background: var(--surface);
     color: var(--ink);
@@ -614,8 +632,11 @@
   }
   .gallery-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 14px;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr));
+    gap: 12px;
+  }
+  @media (min-width: 560px) {
+    .gallery-grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
   }
   .gallery-item {
     border: 1px solid var(--hairline);
@@ -721,10 +742,41 @@
     text-transform: uppercase;
   }
 
-  @media (max-width: 480px) {
-    .hero-eyebrow { margin-top: 32px; }
-    .meta-strip { margin-top: 40px; }
-    .container { padding-top: 16px; padding-bottom: 16px; }
+  @media (max-width: 600px) {
+    .container { padding: 20px 18px; }
+    .container-wide { padding: 20px 18px; }
+    .progress { margin: 18px 0 24px; }
+    .progress-bar { height: 4px; }
+    .gallery-head { flex-direction: column; align-items: flex-start; gap: 6px; }
+    .gallery-count { text-align: left; }
+    .prompt-box { padding: 14px 16px; }
+    .gen-wrap { padding: 56px 20px 64px; }
+    .gen-orb { width: 120px; height: 120px; margin-bottom: 28px; }
+    .gen-title { margin-bottom: 24px; }
+    .result-img-wrap { aspect-ratio: 4 / 5; max-height: 70vh; margin-bottom: 20px; }
+  }
+  @media (max-width: 380px) {
+    .container { padding: 16px 14px; }
+    .logo-text { display: none; }
+    .meta-cell { padding: 14px 10px; }
+    .meta-key { font-size: 9px; letter-spacing: 0.12em; }
+    .option { padding: 16px 18px; min-height: 64px; }
+    .nav-btn { padding: 9px 12px; font-size: 11.5px; }
+    .gen-orb { width: 104px; height: 104px; }
+    .actions { gap: 8px; }
+    .action-btn { flex-basis: 100%; }
+  }
+  @media (max-height: 720px) and (orientation: portrait) {
+    .hero-eyebrow { margin-top: 24px; }
+    .meta-strip { margin-top: 32px; }
+  }
+  @media (orientation: landscape) and (max-height: 500px) {
+    .hero-title { font-size: clamp(40px, 9vw, 72px); }
+    .hero-eyebrow { margin-top: 16px; }
+    .meta-strip { margin-top: 24px; }
+    .gen-wrap { padding: 32px 20px; }
+    .gen-orb { width: 80px; height: 80px; margin-bottom: 16px; }
+    .gen-title { font-size: 48px; margin-bottom: 16px; }
   }
 
   @media (prefers-reduced-motion: reduce) {
